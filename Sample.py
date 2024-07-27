@@ -25,7 +25,7 @@ if name !="":
             print("The word is: ", word)
             break
         print()
-        guess = input("guess a character: ")
+        guess = input("guess a character:  ")
         guesses += guess
         if guess not in word:
             turns -= 1

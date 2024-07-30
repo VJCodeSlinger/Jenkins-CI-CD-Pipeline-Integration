@@ -1,26 +1,42 @@
 pipeline {
     agent any
-    stages{
-        stage("Clean UP")
-        steps {
-            deleteDir()
-        }
-        stage("Clone Repo")
-        steps {
-            sh "git clone https://github.com/VJCodeSlinger/Jenkins-CI-CD-Pipeline-Integration.git"
-        }
-        stage("Build"){
+    stages {
+        stage('Clean UP') {
             steps {
-                dir("Jenkins-CI-CD-Pipeline-Integration"){
-                    sh "python setup.py clean --all"
+                deleteDir()
+            }
+        }
+        stage('Clone Repo') {
+            steps {
+                sh 'git clone https://github.com/VJCodeSlinger/Jenkins-CI-CD-Pipeline-Integration.git'
+            }
+        }
+        stage('Setup Environment') {
+            steps {
+                dir('Jenkins-CI-CD-Pipeline-Integration/Jenkins') {
+                    // Create and use a virtual environment
+                    sh '''
+                    python3 -m venv venv
+                    venv/bin/python -m pip install --upgrade pip
+                    venv/bin/python -m pip install pytest
+                    '''
                 }
             }
         }
-        stage("Test"){
+        stage('Build') {
             steps {
-                dir("Jenkins-CI-CD-Pipeline-Integration"){
-                    sh "pytest test"
-                }                
+                dir('Jenkins-CI-CD-Pipeline-Integration/Jenkins') {
+                    // Run the build script within the virtual environment
+                    sh 'venv/bin/python Sample.py clean --all'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir('Jenkins-CI-CD-Pipeline-Integration/Jenkins') {
+                    // Run tests within the virtual environment
+                    sh 'venv/bin/python -m pytest Sample_unit_test.py'
+                }
             }
         }
     }

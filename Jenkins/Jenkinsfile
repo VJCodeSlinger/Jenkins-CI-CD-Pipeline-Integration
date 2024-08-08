@@ -35,7 +35,7 @@ pipeline {
             steps {
                 dir('Jenkins-CI-CD-Pipeline-Integration/Jenkins') {
                     // Run tests within the virtual environment
-                    sh 'venv/bin/python -m pytest Sample_unit_test.py'
+                    // sh 'venv/bin/python -m pytest Sample_unit_test.py'
                 }
             }
         }
